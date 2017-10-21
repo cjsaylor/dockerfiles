@@ -1,0 +1,31 @@
+FROM jupyter/minimal-notebook
+
+USER root
+RUN apt-get update && apt-get install -y curl
+
+# Start Nodejs kernal
+
+## Removing the packaged nodejs in favor of our own controlled version
+## The base notebook includes this for jupyter hub which we are not using.
+RUN conda uninstall nodejs -y
+RUN curl -sL https://deb.nodesource.com/setup_8.x | bash && \
+	apt-get install -y nodejs g++ make software-properties-common libzmq3-dev
+
+RUN mkdir -p /tmp/kernals/jupyter-nodejs
+COPY ./jupyter-nodejs /tmp/kernals/jupyter-nodejs
+RUN chown -R $NB_USER /tmp/kernals/jupyter-nodejs
+
+USER $NB_USER
+WORKDIR /tmp/kernals/jupyter-nodejs
+RUN mkdir -p $HOME/.ipython/kernels/nodejs/
+RUN npm install && node install.js
+RUN npm run build
+RUN npm run build-ext
+WORKDIR /tmp/kernals/jupyter-nodejs/node_modules/zmq/
+RUN npm run install
+
+# End Nodejs kernal
+
+WORKDIR $HOME
+
+EXPOSE 8888
