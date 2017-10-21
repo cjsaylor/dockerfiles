@@ -5,8 +5,10 @@ git clone https://github.com/notablemind/jupyter-nodejs.git 2> /dev/null
 echo ""
 echo "Enter a password to access the jupyter notebook: "
 read -s password
+
+here=`pwd`
 # Generate a password
-hashedPassword=`docker run -it --rm -v /Users/christophersaylor/Projects/dockerfiles/jupyter:/tmp/jupyter jupyter/minimal-notebook start.sh ipython --quiet /tmp/jupyter/get_password.py ${password} | grep sha1:`
+hashedPassword=`docker run -it --rm -v ${here}:/tmp/jupyter jupyter/minimal-notebook start.sh ipython --quiet /tmp/jupyter/get_password.py ${password} | grep sha1:`
 
 echo ""
 echo "Enter path to local notebooks: "
