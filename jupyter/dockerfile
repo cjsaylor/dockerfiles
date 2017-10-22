@@ -26,6 +26,19 @@ RUN npm run install
 
 # End Nodejs kernal
 
+# Start PHP kernal
+USER root
+RUN apt-get install -y \
+	php7.0-cli \
+	php-zmq
+RUN curl -sL https://getcomposer.org/installer | php && \
+	mv composer.phar /usr/local/bin/composer
+RUN curl -sL https://litipk.github.io/Jupyter-PHP-Installer/dist/jupyter-php-installer.phar > /tmp/jupyter-php.phar
+RUN php /tmp/jupyter-php.phar install
+
+# End PHP kernal
+
+USER $NB_USER
 WORKDIR $HOME
 
 EXPOSE 8888
