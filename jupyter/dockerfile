@@ -1,4 +1,4 @@
-FROM jupyter/minimal-notebook
+FROM jupyter/scipy-notebook
 
 USER root
 RUN apt-get update && apt-get install -y curl
@@ -18,11 +18,13 @@ RUN chown -R $NB_USER /tmp/kernals/jupyter-nodejs
 USER $NB_USER
 WORKDIR /tmp/kernals/jupyter-nodejs
 RUN mkdir -p $HOME/.ipython/kernels/nodejs/
+RUN mkdir -p $HOME/.local/share/jupyter/kernals
 RUN npm install && node install.js
 RUN npm run build
 RUN npm run build-ext
 WORKDIR /tmp/kernals/jupyter-nodejs/node_modules/zmq/
 RUN npm run install
+RUN cp -R $HOME/.ipython/kernels/nodejs/ $HOME/.local/share/jupyter/kernals
 
 # End Nodejs kernal
 
