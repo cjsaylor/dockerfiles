@@ -1,3 +1,3 @@
-FROM golang:1.10-rc-alpine
+FROM golang:1.10-alpine
 
 RUN apk add --update alpine-sdk
